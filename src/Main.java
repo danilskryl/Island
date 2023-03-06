@@ -3,7 +3,7 @@ import Animals.init.Statistic;
 
 public class Main {
     public static void main(String[] args) {
-        new Initialization(500,500).init();
-        new Thread(new Statistic()).start();
+        new Initialization(10,10).init();
+        new Thread(Statistic.getStatistic()).start();
     }
 }
