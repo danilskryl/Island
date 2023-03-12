@@ -1,10 +1,11 @@
 package Animals.predators;
-import Animals.interfaces.AbleToEatMeat;
 
+import Animals.Island;
 import java.util.Map;
 
-public class Anaconda extends Predator implements AbleToEatMeat {
-    public Anaconda() {
+public class Anaconda extends Predator {
+    public Anaconda(Island island) {
+        super(island);
         weight = 15.0;
         maxCountOnCell = 30;
         speed = 1;

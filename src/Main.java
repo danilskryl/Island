@@ -1,9 +1,8 @@
-import Animals.init.Initialization;
-import Animals.init.Statistic;
+import Animals.Island;
 
 public class Main {
     public static void main(String[] args) {
-        new Initialization(10,10).init();
-        new Thread(Statistic.getStatistic()).start();
+        Island island = new Island(40,100,100,100,50);
+        island.start();
     }
 }

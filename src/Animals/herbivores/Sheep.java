@@ -1,9 +1,10 @@
 package Animals.herbivores;
 
-import Animals.interfaces.AbleToEatGrass;
+import Animals.Island;
 
-public class Sheep extends Herbivore implements AbleToEatGrass {
-    public Sheep() {
+public class Sheep extends Herbivore {
+    public Sheep(Island island) {
+        super(island);
         weight = 70.0;
         maxCountOnCell = 140;
         speed = 3;

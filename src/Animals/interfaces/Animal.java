@@ -1,6 +1,8 @@
 package Animals.interfaces;
 
-import Animals.init.Statistic;
+import Animals.Island;
+import Animals.herbivores.Herbivore;
+import Animals.omnivorous.Omnivorous;
 import Animals.predators.Predator;
 import Animals.threadFactory.AnimalFactory;
 import lombok.Getter;
@@ -14,118 +16,141 @@ import static java.lang.Thread.sleep;
 
 @Getter
 @Setter
-public abstract class Animal implements Runnable, Cloneable {
+public abstract class Animal implements Organism, Runnable, Cloneable {
     private int x;
     private int y;
-    protected int speed;
+    public boolean sex;
     protected double weight;
-    protected int maxCountOnCell;
     protected double kgToFedUp;
-    protected volatile double fullness = 100;
-    protected boolean isAlive = true;
-    private boolean sex;
-    private int timeToReproduct = 2;
+    protected double speed;
+    protected int maxCountOnCell;
+    private boolean isAlive = true;
+    private volatile double fullness = 100;
     protected Map<String,Integer> animalsEaten = new HashMap<>();
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private static AnimalFactory animalFactory = new AnimalFactory();
-    public Animal() {
-        setX(random.nextInt(40));
-        setY(random.nextInt(100));
+    private AnimalFactory animalFactory = new AnimalFactory();
+    public int timeToReproduct = 2;
+    private Island island;
+    public Animal(Island island) {
+        this.island = island;
+        setX(random.nextInt(0,getIsland().getHeight()));
+        setY(random.nextInt(0,getIsland().getWidth()));
         setSex(random.nextBoolean());
-        AnimalFactory.animals.add(this);
-        animalFactory.newThread(this).start();
-        Statistic.animals.add(this);
-    }
-    public void move() {
-        AtomicInteger turn = new AtomicInteger(random.nextInt(4));
-        if (turn.get() == 0) {
-            y += speed;
-        } else if (turn.get() == 1) {
-            y -= speed;
-        } else if (turn.get() == 2) {
-            x += speed;
+        getIsland().getAnimals().add(this);
+        if (this instanceof Predator) {
+            getIsland().getPredators().add((Predator) this);
+        } else if (this instanceof Herbivore) {
+            getIsland().getHerbivores().add((Herbivore) this);
         } else {
-            x -= speed;
+            getIsland().getOmnivorous().add((Omnivorous) this);
+        }
+        animalFactory.newThread(this).start();
+    }
+    @Override
+    public synchronized void move() {
+        boundsCheck();
+        if (getSpeed() == 0) return;
+        AtomicInteger turn = new AtomicInteger(random.nextInt(0, (int) speed));
+        if (turn.get() == 0) {
+            y += getSpeed();
+        } else if (turn.get() == 1) {
+            y -= getSpeed();
+        } else if (turn.get() == 2) {
+            x += getSpeed();
+        } else {
+            x -= getSpeed();
+        }
+        boundsCheck();
+        if (getCountAnimalsOnCell() > getMaxCountOnCell()) {
+            move();
         }
     }
-    public void reproduct() {
-        long animalsOnCell = AnimalFactory.animals.stream()
-                .filter(p -> p.getX() == getX() && p.getY() == getY() && !p.isSex())
+    public long getCountAnimalsOnCell() {
+        return getIsland().getAnimals().stream()
+                .filter(a -> a.getX() == getX() && a.getY() == getY() && !a.isSex())
                 .filter(p -> p.getClass().getSimpleName().equals(this.getClass().getSimpleName()))
                 .count();
-        if (!(animalsOnCell == 0)) {
-            Predator child = this.clone();
+    }
+    @Override
+    public synchronized void reproduct() {
+        if (!(getCountAnimalsOnCell() == 0)) {
+            Animal child = this.clone();
             System.out.println(this.getClass().getSimpleName() + " was born");
-            animalFactory.newThread(child).start();
-            AnimalFactory.predators.add(child);
-            AnimalFactory.animals.add(child);
-            Statistic.animals.add(child);
+            getIsland().getAnimals().add(child);
+            getAnimalFactory().newThread(child).start();
+            getIsland().getAnimals().add(child);
             setTimeToReproduct(5);
         }
     }
-    public void eat() {
-        List<Animal> animalsOnCellWhichCanEat = AnimalFactory.animals.stream()
+
+    @Override
+    public synchronized void eat() {
+        if (getFullness() > 80) return;
+        List<Animal> animalsOnCellWhichCanEat = getIsland().getAnimals().stream()
                 .filter(h -> h.getX() == this.getX() && h.getY() == this.getY())
-                .filter(h -> animalsEaten.containsKey(h.getClass().getSimpleName()))
+                .filter(h -> getAnimalsEaten().containsKey(h.getClass().getSimpleName()))
                 .toList();
         if (!(animalsOnCellWhichCanEat.size() == 0)) {
-            int animalIndex = random.nextInt(0, animalsOnCellWhichCanEat.size());
-            int chance = random.nextInt(1, 101);
+            int animalIndex = getRandom().nextInt(0, animalsOnCellWhichCanEat.size());
+            int chance = getRandom().nextInt(1, 101);
             Animal animal = animalsOnCellWhichCanEat.get(animalIndex);
             if (chance < this.getAnimalsEaten().get(animal.getClass().getSimpleName())) {
                 this.setFullness(getFullness() + (this.getKgToFedUp() / animal.getWeight()));
                 if (this.getFullness() > 100) this.setFullness(100);
                 animal.die();
-                System.out.println(this.getClass().getSimpleName() + " eat " + animal.getClass().getSimpleName());
+                System.out.println(getClass().getSimpleName() + " eat " + animal.getClass().getSimpleName());
             }
         }
     }
-    public void die() {
-        System.out.println(this.getClass().getSimpleName() + " died of hunger");
-        Statistic.animals.remove(this);
-        isAlive = false;
+    public synchronized void die() {
+        getIsland().getAnimals().remove(this);
+        setAlive(false);
     }
-    public void reduction() {
-        setFullness(getFullness() - (speed * weight / 100));
-        if (fullness <= 0) {
+    private synchronized void reduction() {
+        setFullness(getFullness() - (getSpeed() * getWeight() / 200));
+        if (getFullness() <= 0) {
             die();
         }
     }
+    private synchronized void boundsCheck() {
+        if (getX() > getIsland().getHeight())
+            setX(getX() - getIsland().getHeight());
+        else if (getX() < 0)
+            setX(getX() + getIsland().getHeight());
+        if (getY() > getIsland().getWidth())
+            setY(getY() - getIsland().getWidth());
+        else if (getY() < 0)
+            setY(getY() + getIsland().getWidth());
+    }
+    protected synchronized double getFullness() {
+        return fullness;
+    }
+    protected synchronized void setFullness(double fullness) {
+        this.fullness = fullness;
+    }
+
     @Override
-    public Predator clone() {
+    public Animal clone() {
         try {
-            Predator clone = (Predator) super.clone();
-            clone.setFullness(100);
-            clone.setX(this.x);
-            clone.setY(this.y);
-            clone.setSpeed(this.getSpeed());
-            clone.setKgToFedUp(this.getKgToFedUp());
-            clone.setWeight(this.getWeight());
-            clone.setSex(random.nextBoolean());
-            return clone;
+            return (Animal) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
-    }
-    public synchronized double getFullness() {
-        return fullness;
-    }
-    public synchronized void setFullness(double fullness) {
-        this.fullness = fullness;
     }
     @Override
     public void run() {
         while (isAlive) {
             move();
-            reduction();
             eat();
-            move();
-            if (sex && timeToReproduct == 0) {
+            reduction();
+            if (isSex() && getTimeToReproduct() == 0) {
                 reproduct();
             }
-            setTimeToReproduct(timeToReproduct - 1);
+            if (getTimeToReproduct() > 0) {
+                setTimeToReproduct(getTimeToReproduct() - 1);
+            }
             try {
-                sleep(5000);
+                sleep(getRandom().nextInt(1000,5000));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -1,12 +1,12 @@
 package Animals.herbivores;
+import Animals.Island;
 
-import Animals.interfaces.AbleToEatGrass;
-
-public class Caterpillar extends Herbivore implements AbleToEatGrass {
-    public Caterpillar() {
+public class Caterpillar extends Herbivore {
+    public Caterpillar(Island island) {
+        super(island);
         weight = 0.01;
         maxCountOnCell = 1000;
-        speed = 0;
+        speed = 1;
         kgToFedUp = 0;
     }
 }

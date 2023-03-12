@@ -1,10 +1,11 @@
 package Animals.predators;
-import Animals.interfaces.AbleToEatMeat;
 
+import Animals.Island;
 import java.util.Map;
 
-public class Bear extends Predator implements AbleToEatMeat {
-    public Bear() {
+public class Bear extends Predator {
+    public Bear(Island island) {
+        super(island);
         weight = 500.0;
         maxCountOnCell = 5;
         speed = 2;
