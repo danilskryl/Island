@@ -10,9 +10,7 @@ import Animals.predators.*;
 import Animals.statistic.Statistic;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 @Getter
 @Setter
@@ -27,9 +25,10 @@ public final class Island {
     private CopyOnWriteArrayList<Predator> predators = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Herbivore> herbivores = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Omnivorous> omnivorous = new CopyOnWriteArrayList<>();
+    private ExecutorService executorService = Executors.newFixedThreadPool(30);
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
     private Statistic statistic = new Statistic(animals);
-    public Island(int height, int width, int countPredators, int countHerbivores, int countOmnivorous) {
+    public Island(int height, int width,int countPredators, int countHerbivores, int countOmnivorous) {
         this.height = height;
         this.width = width;
         this.countPredators = countPredators;

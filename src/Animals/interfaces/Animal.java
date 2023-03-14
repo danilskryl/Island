@@ -4,7 +4,6 @@ import Animals.Island;
 import Animals.herbivores.Herbivore;
 import Animals.omnivorous.Omnivorous;
 import Animals.predators.Predator;
-import Animals.threadFactory.AnimalFactory;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     private volatile double fullness = 100;
     protected Map<String,Integer> animalsEaten = new HashMap<>();
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private AnimalFactory animalFactory = new AnimalFactory();
     public int timeToReproduct = 2;
     private Island island;
     public Animal(Island island) {
@@ -44,7 +42,8 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         } else {
             getIsland().getOmnivorous().add((Omnivorous) this);
         }
-        animalFactory.newThread(this).start();
+        getIsland().getExecutorService().execute(this);
+        //animalFactory.newThread(this).start();
     }
     @Override
     public synchronized void move() {
@@ -77,15 +76,14 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             Animal child = this.clone();
             System.out.println(this.getClass().getSimpleName() + " was born");
             getIsland().getAnimals().add(child);
-            getAnimalFactory().newThread(child).start();
-            getIsland().getAnimals().add(child);
+            getIsland().getExecutorService().execute(child);
             setTimeToReproduct(5);
         }
     }
 
     @Override
     public synchronized void eat() {
-        if (getFullness() > 80) return;
+        if (getFullness() >= 100) return;
         List<Animal> animalsOnCellWhichCanEat = getIsland().getAnimals().stream()
                 .filter(h -> h.getX() == this.getX() && h.getY() == this.getY())
                 .filter(h -> getAnimalsEaten().containsKey(h.getClass().getSimpleName()))
