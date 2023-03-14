@@ -1,6 +1,6 @@
 package Animals.herbivores;
 
-import Animals.Island;
+import Island.Island;
 
 public class Buffalo extends Herbivore {
     public Buffalo(Island island) {

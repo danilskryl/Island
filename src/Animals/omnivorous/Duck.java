@@ -1,6 +1,6 @@
 package Animals.omnivorous;
 
-import Animals.Island;
+import Island.Island;
 
 import java.util.Map;
 

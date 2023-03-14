@@ -1,6 +1,6 @@
 package Animals.herbivores;
 
-import Animals.Island;
+import Island.Island;
 import Animals.grass.Grass;
 import Animals.interfaces.Animal;
 
@@ -16,6 +16,7 @@ public abstract class Herbivore extends Animal {
         if (grass[getX()][getY()] >= getKgToFedUp()) {
             Grass.getGrass().decrement(getX(),getY(),getKgToFedUp() / 5);
             setFullness(getFullness() + getKgToFedUp()/ 10);
+            //System.out.println("grass");
         }
     }
 }

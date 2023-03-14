@@ -1,5 +1,5 @@
-import Animals.Island;
-import Animals.userConsole.Console;
+import Island.Island;
+import Console.userConsole.Console;
 
 public class Main {
     public static void main(String[] args) {

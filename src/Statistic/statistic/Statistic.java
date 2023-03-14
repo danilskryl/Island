@@ -1,4 +1,4 @@
-package Animals.statistic;
+package Statistic.statistic;
 
 import Animals.herbivores.Herbivore;
 import Animals.interfaces.Animal;
@@ -39,5 +39,6 @@ public final class Statistic implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("All animals is died");
     }
 }

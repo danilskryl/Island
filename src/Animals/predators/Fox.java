@@ -1,6 +1,6 @@
 package Animals.predators;
 
-import Animals.Island;
+import Island.Island;
 import java.util.Map;
 
 public class Fox extends Predator {

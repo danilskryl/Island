@@ -1,6 +1,6 @@
 package Animals.interfaces;
 
-import Animals.Island;
+import Island.Island;
 import Animals.herbivores.Herbivore;
 import Animals.omnivorous.Omnivorous;
 import Animals.predators.Predator;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import static java.lang.Thread.sleep;
 
 @Getter
 @Setter
@@ -42,8 +42,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         } else {
             getIsland().getOmnivorous().add((Omnivorous) this);
         }
-        getIsland().getExecutorService().execute(this);
-        //animalFactory.newThread(this).start();
+        getIsland().getExecutorService().scheduleWithFixedDelay(this,1,5,TimeUnit.SECONDS);
     }
     @Override
     public synchronized void move() {
@@ -76,7 +75,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             Animal child = this.clone();
             System.out.println(this.getClass().getSimpleName() + " was born");
             getIsland().getAnimals().add(child);
-            getIsland().getExecutorService().execute(child);
+            getIsland().getExecutorService().scheduleWithFixedDelay(this,1,5,TimeUnit.SECONDS);
             setTimeToReproduct(5);
         }
     }
@@ -146,11 +145,6 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             }
             if (getTimeToReproduct() > 0) {
                 setTimeToReproduct(getTimeToReproduct() - 1);
-            }
-            try {
-                sleep(getRandom().nextInt(1000,5000));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         }
     }

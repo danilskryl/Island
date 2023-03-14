@@ -1,6 +1,6 @@
 package Animals.herbivores;
 
-import Animals.Island;
+import Island.Island;
 
 public class Deer extends Herbivore {
     public Deer(Island island) {

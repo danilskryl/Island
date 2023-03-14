@@ -1,4 +1,4 @@
-package Animals;
+package Island;
 
 import Animals.herbivores.*;
 import Animals.interfaces.Animal;
@@ -7,7 +7,7 @@ import Animals.omnivorous.Duck;
 import Animals.omnivorous.Mouse;
 import Animals.omnivorous.Omnivorous;
 import Animals.predators.*;
-import Animals.statistic.Statistic;
+import Statistic.statistic.Statistic;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.concurrent.*;
@@ -25,7 +25,7 @@ public final class Island {
     private CopyOnWriteArrayList<Predator> predators = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Herbivore> herbivores = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Omnivorous> omnivorous = new CopyOnWriteArrayList<>();
-    private ExecutorService executorService = Executors.newFixedThreadPool(30);
+    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
     private Statistic statistic = new Statistic(animals);
     public Island(int height, int width,int countPredators, int countHerbivores, int countOmnivorous) {

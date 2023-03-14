@@ -1,6 +1,6 @@
 package Animals.herbivores;
 
-import Animals.Island;
+import Island.Island;
 import java.util.Map;
 
 public class Horse extends Herbivore {

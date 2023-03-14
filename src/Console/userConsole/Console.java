@@ -1,4 +1,4 @@
-package Animals.userConsole;
+package Console.userConsole;
 
 import lombok.Getter;
 import java.util.Scanner;
