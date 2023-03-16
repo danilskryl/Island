@@ -1,9 +1,6 @@
 package Animals.interfaces;
 
 import Island.Island;
-import Animals.herbivores.Herbivore;
-import Animals.omnivorous.Omnivorous;
-import Animals.predators.Predator;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.HashMap;
@@ -25,24 +22,18 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     protected int maxCountOnCell;
     private boolean isAlive = true;
     private volatile double fullness = 100;
-    protected Map<String,Integer> animalsEaten = new HashMap<>();
+    protected Map<String, Integer> animalsEaten = new HashMap<>();
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    public int timeToReproduct = 2;
+    private int timeToReproduct = 0;
     private Island island;
+
     public Animal(Island island) {
         this.island = island;
-        setX(random.nextInt(0,getIsland().getHeight()));
-        setY(random.nextInt(0,getIsland().getWidth()));
+        setX(random.nextInt(0, getIsland().getHeight()));
+        setY(random.nextInt(0, getIsland().getWidth()));
         setSex(random.nextBoolean());
         getIsland().getAnimals().add(this);
-        if (this instanceof Predator) {
-            getIsland().getPredators().add((Predator) this);
-        } else if (this instanceof Herbivore) {
-            getIsland().getHerbivores().add((Herbivore) this);
-        } else {
-            getIsland().getOmnivorous().add((Omnivorous) this);
-        }
-        getIsland().getExecutorService().scheduleWithFixedDelay(this,1,5,TimeUnit.SECONDS);
+        getIsland().getExecutorService().scheduleAtFixedRate(this,0,2,TimeUnit.SECONDS);
     }
     @Override
     public synchronized void move() {
@@ -62,6 +53,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         if (getCountAnimalsOnCell() > getMaxCountOnCell()) {
             move();
         }
+        //System.out.println("move" + getClass().getSimpleName());
     }
     public long getCountAnimalsOnCell() {
         return getIsland().getAnimals().stream()
@@ -75,11 +67,10 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             Animal child = this.clone();
             System.out.println(this.getClass().getSimpleName() + " was born");
             getIsland().getAnimals().add(child);
-            getIsland().getExecutorService().scheduleWithFixedDelay(this,1,5,TimeUnit.SECONDS);
+            getIsland().getExecutorService().scheduleAtFixedRate(child, 0, 2, TimeUnit.SECONDS);
             setTimeToReproduct(5);
         }
     }
-
     @Override
     public synchronized void eat() {
         if (getFullness() >= 100) return;
@@ -102,6 +93,8 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     public synchronized void die() {
         getIsland().getAnimals().remove(this);
         setAlive(false);
+        Thread.currentThread().interrupt();
+        //System.out.println("die " + getClass().getSimpleName());
     }
     private synchronized void reduction() {
         setFullness(getFullness() - (getSpeed() * getWeight() / 200));
@@ -125,7 +118,6 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     protected synchronized void setFullness(double fullness) {
         this.fullness = fullness;
     }
-
     @Override
     public Animal clone() {
         try {
@@ -136,16 +128,20 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     }
     @Override
     public void run() {
-        while (isAlive) {
-            move();
-            eat();
-            reduction();
-            if (isSex() && getTimeToReproduct() == 0) {
-                reproduct();
-            }
-            if (getTimeToReproduct() > 0) {
-                setTimeToReproduct(getTimeToReproduct() - 1);
-            }
+        move();
+        eat();
+        reduction();
+        if (isSex() && getTimeToReproduct() == 0) {
+            reproduct();
+        }
+        if (getTimeToReproduct() > 0) {
+            setTimeToReproduct(getTimeToReproduct() - 1);
+        }
+        if (getX() > getIsland().getHeight()) {
+            System.out.println("error XX");
+        }
+        if (getY() > getIsland().getWidth()) {
+            System.out.println("error YY");
         }
     }
 }

@@ -2,32 +2,23 @@ package Island;
 
 import Animals.herbivores.*;
 import Animals.interfaces.Animal;
-import Animals.omnivorous.Boar;
-import Animals.omnivorous.Duck;
-import Animals.omnivorous.Mouse;
-import Animals.omnivorous.Omnivorous;
+import Animals.omnivorous.*;
 import Animals.predators.*;
 import Statistic.statistic.Statistic;
 import lombok.Getter;
-import lombok.Setter;
 import java.util.concurrent.*;
 
 @Getter
-@Setter
 public final class Island {
-    private int countPredators;
-    private int countHerbivores;
-    private int countOmnivorous;
-    private int height;
-    private int width;
-    private int[][] field = new int[height][width];
-    private CopyOnWriteArrayList<Animal> animals = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Predator> predators = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Herbivore> herbivores = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Omnivorous> omnivorous = new CopyOnWriteArrayList<>();
-    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private final int countPredators;
+    private final int countHerbivores;
+    private final int countOmnivorous;
+    private final int height;
+    private final int width;
+    private final CopyOnWriteArrayList<Animal> animals = new CopyOnWriteArrayList<>();
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    private Statistic statistic = new Statistic(animals);
+    private final Statistic statistic = new Statistic(animals);
     public Island(int height, int width,int countPredators, int countHerbivores, int countOmnivorous) {
         this.height = height;
         this.width = width;
@@ -35,14 +26,14 @@ public final class Island {
         this.countHerbivores = countHerbivores;
         this.countOmnivorous = countOmnivorous;
     }
-    public void start() {
-        init();
-        new Thread(statistic).start();
-    }
     private void init() {
         for (int i = 0; i < countPredators; i++)  createRandomPredator();
         for (int i = 0; i < countHerbivores; i++) createRandomHerbivore();
         for (int i = 0; i < countOmnivorous; i++) createRandomOmnivorous();
+    }
+    public void start() {
+        init();
+        new Thread(statistic).start();
     }
     private void createRandomPredator() {
         int num = random.nextInt(0,5);

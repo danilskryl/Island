@@ -1,8 +1,8 @@
 package Animals.omnivorous;
+
 import Island.Island;
 import Animals.grass.Grass;
 import Animals.interfaces.Animal;
-
 import java.util.List;
 
 public abstract class Omnivorous extends Animal {
@@ -13,7 +13,7 @@ public abstract class Omnivorous extends Animal {
 
     @Override
     public synchronized void eat() {
-        if (getFullness() > 80) return;
+        if (getFullness() >= 100) return;
         List<Animal> animalsOnCellWhichCanEat = getIsland().getAnimals().stream()
                 .filter(h -> h.getX() == this.getX() && h.getY() == this.getY())
                 .filter(h -> animalsEaten.containsKey(h.getClass().getSimpleName()))
