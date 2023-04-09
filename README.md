@@ -1,6 +1,6 @@
 <h1>Final project of the second module.</h1>
 This is a <em>simulation</em> of an island with wild animals.
-There are only three species: carnivores, herbivores and omnivores. 
+There are only three species: predators, herbivores and omnivores. 
 The animal must move around the field in search of food, otherwise it will <b>die</b>.
 <h2>Animal Interface</h2>
 The <b>Animal</b> interface implements the <b>Organism</b> interface and adds additional functionality specific to animals in the simulation.
