@@ -3,6 +3,8 @@ package Animals.interfaces;
 import Island.Island;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     private int timeToReproduct = 3;
     private Island island;
     private ScheduledFuture<?> task;
+    private static final Logger logger = LoggerFactory.getLogger(Animal.class);
 
     public Animal(Island island) {
         this.island = island;
@@ -75,6 +78,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             getIsland().getExecutorService().scheduleAtFixedRate(child, 0, 2, TimeUnit.SECONDS);
             getIsland().getLocker().writeLock().unlock();
             setTimeToReproduct(6);
+            logger.info("{} was born", child.getClass().getSimpleName());
         }
     }
 
@@ -92,6 +96,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             if (getFullness() > 100) setFullness(100);
             animal.die();
         }
+        logger.info("{} eat {}", this.getClass().getSimpleName(), animal.getClass().getSimpleName());
     }
 
     public List<Animal> animalsOnCellWhichCanEat(Animal animal) {
@@ -109,6 +114,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         getIsland().getAnimals().remove(this);
         getIsland().getLocker().writeLock().unlock();
         task.cancel(false);
+        logger.info("{} die", this.getClass().getSimpleName());
     }
 
     private void reduction() {
@@ -134,6 +140,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         try {
             return (Animal) super.clone();
         } catch (CloneNotSupportedException e) {
+            logger.error("{} can't clone", this);
             throw new AssertionError();
         }
     }

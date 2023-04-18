@@ -21,7 +21,7 @@ public final class Island {
     private final int width;
     private final Grass grass;
     private final CopyOnWriteArrayList<Animal> animals = new CopyOnWriteArrayList<>();
-    private final ScheduledThreadPoolExecutor executorService = new ScheduledThreadPoolExecutor(100);
+    private final ScheduledThreadPoolExecutor executorService = new ScheduledThreadPoolExecutor(20);
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
     private final Statistic statistic = new Statistic(animals);
     private final ReadWriteLock locker = new ReentrantReadWriteLock();
