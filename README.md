@@ -1,10 +1,10 @@
-<h1>Final project of the second module.</h1>
-This is a <em>simulation</em> of an island with wild animals.
+<h1>Final project of the second module</h1>
+<p>This is a <em>simulation</em> of an island with wild animals.
 There are only three species: predators, herbivores and omnivores. 
-The animal must move around the field in search of food, otherwise it will <b>die</b>.
+The animal must move around the field in search of food, otherwise it will <b>die</b>.</p>
 <h2>Animal Interface</h2>
-The <b>Animal</b> interface implements the <b>Organism</b> interface and adds additional functionality specific to animals in the simulation.
-The <b>Animal</b> interface also implements the <b>Cloneable</b> interface, allowing animals to be cloned on the Island.
+<p>The <b>Animal</b> interface implements the <b>Organism</b> interface and adds additional functionality specific to animals in the simulation.</p>
+<p>The <b>Animal</b> interface also implements the <b>Cloneable</b> interface, allowing animals to be cloned on the Island.</p>
 <h3>An Animal has the following attributes:</h3>
 
 <b>x</b>: an integer representing the x-coordinate of the animal's location on the Island.
@@ -47,3 +47,6 @@ The <b>Animal</b> interface also implements the <b>Cloneable</b> interface, allo
 <b>boundsCheck()</b>: ensures the animal's location on the Island stays within the boundaries of the Island.
 
 <b>run()</b>: implements the Runnable interface and defines the behavior of the animal's thread.
+
+<h3>Used technologies:</h3>
+<a href="https://junit.org/junit5/">JUnit 5</a>, <a href="https://slf4j.org">SLF4J</a>, <a href="https://projectlombok.org">Lombok</a>

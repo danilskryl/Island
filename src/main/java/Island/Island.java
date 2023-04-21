@@ -1,14 +1,20 @@
 package Island;
 
-import grass.Grass;
 import Animals.herbivores.*;
 import Animals.interfaces.Animal;
-import Animals.omnivorous.*;
+import Animals.omnivorous.Boar;
+import Animals.omnivorous.Duck;
+import Animals.omnivorous.Mouse;
 import Animals.predators.*;
 import Statistic.statistic.Statistic;
+import grass.Grass;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -25,6 +31,8 @@ public final class Island implements Runnable {
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
     private final Statistic statistic = new Statistic(animals);
     private final ReadWriteLock locker = new ReentrantReadWriteLock();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Island.class);
+
     public Island(int height, int width, int countPredators, int countHerbivores, int countOmnivorous) {
         this.height = height;
         this.width = width;
@@ -32,6 +40,9 @@ public final class Island implements Runnable {
         this.countHerbivores = countHerbivores;
         this.countOmnivorous = countOmnivorous;
         grass = new Grass(height, width);
+        LOGGER.debug("Created island with height - {} and width - {}. " +
+                        "Amount of predators - {}, herbivores - {}, omnivorous - {}",
+                height, width, countPredators, countHerbivores, countOmnivorous);
     }
 
     private void init() {
@@ -79,6 +90,7 @@ public final class Island implements Runnable {
 
     @Override
     public void run() {
+        LOGGER.debug("Island is running");
         init();
         while (animals.size() > 0) {
             statistic.getStat();
@@ -89,5 +101,6 @@ public final class Island implements Runnable {
             }
         }
         System.out.println("All animals is died");
+        LOGGER.info("All animals is died");
     }
 }

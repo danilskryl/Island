@@ -97,7 +97,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
             if (getFullness() > 100) setFullness(100);
             animal.die();
         }
-        logger.info("{} eat {}", this.getClass().getSimpleName(), animal.getClass().getSimpleName());
+        logger.info("{} ate {}", this.getClass().getSimpleName(), animal.getClass().getSimpleName());
     }
 
     public List<Animal> animalsOnCellWhichCanEat(Animal animal) {
@@ -115,7 +115,7 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
         getIsland().getAnimals().remove(this);
         getIsland().getLocker().writeLock().unlock();
         task.cancel(false);
-        logger.info("{} die", this.getClass().getSimpleName());
+        logger.info("{} died", this.getClass().getSimpleName());
     }
 
     private void reduction() {
