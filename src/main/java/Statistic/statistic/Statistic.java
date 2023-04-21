@@ -6,18 +6,17 @@ import Animals.omnivorous.Omnivorous;
 import Animals.predators.Predator;
 import lombok.Getter;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.*;
 
 
 @Getter
-public final class Statistic implements Runnable {
+public final class Statistic {
     private final CopyOnWriteArrayList<Animal> animals;
-
     public Statistic(CopyOnWriteArrayList<Animal> animals) {
         this.animals = animals;
     }
 
-    private void getStat() {
+    public void getStat() {
         System.out.printf("\nSTATISTIC:\nThe count of animals - %d\n", animals.size());
         System.out.printf("The count of predators - %d\n", getCountPredators());
         System.out.printf("The count of herbivores - %d\n", getCountHerbivore());
@@ -34,10 +33,5 @@ public final class Statistic implements Runnable {
 
     private long getCountOmnivorous() {
         return animals.stream().filter(a -> a instanceof Omnivorous).count();
-    }
-
-    @Override
-    public void run() {
-        getStat();
     }
 }

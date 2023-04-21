@@ -1,4 +1,4 @@
-package Animals.grass;
+package grass;
 
 import lombok.Getter;
 import lombok.Setter;

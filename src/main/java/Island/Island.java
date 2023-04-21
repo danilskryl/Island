@@ -1,6 +1,6 @@
 package Island;
 
-import Animals.grass.Grass;
+import grass.Grass;
 import Animals.herbivores.*;
 import Animals.interfaces.Animal;
 import Animals.omnivorous.*;
@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Getter
-public final class Island {
+public final class Island implements Runnable {
     private final int countPredators;
     private final int countHerbivores;
     private final int countOmnivorous;
@@ -38,11 +38,6 @@ public final class Island {
         for (int i = 0; i < countPredators; i++) createRandomPredator();
         for (int i = 0; i < countHerbivores; i++) createRandomHerbivore();
         for (int i = 0; i < countOmnivorous; i++) createRandomOmnivorous();
-    }
-
-    public void start() {
-        init();
-        executorService.scheduleAtFixedRate(statistic,0,3, TimeUnit.SECONDS);
     }
 
     private void createRandomPredator() {
@@ -80,5 +75,19 @@ public final class Island {
 
     public CopyOnWriteArrayList<Animal> getAnimals() {
         return animals;
+    }
+
+    @Override
+    public void run() {
+        init();
+        while (animals.size() > 0) {
+            statistic.getStat();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("All animals is died");
     }
 }
