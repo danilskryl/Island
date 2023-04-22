@@ -5,26 +5,28 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class AnimalTest {
     int x = 50;
     int y = 50;
-    Wolf wolfMale;
+    Wolf wolf;
     Wolf wolfFemale;
     Island island = new Island(100, 100, 0, 0, 0);
 
     @BeforeEach
     void initWolfs() {
-        wolfMale = new Wolf(island);
+        wolf = new Wolf(island);
         wolfFemale = new Wolf(island);
-        wolfMale.setX(x);
-        wolfMale.setY(y);
+        wolf.setX(x);
+        wolf.setY(y);
         wolfFemale.setX(x);
         wolfFemale.setY(y);
     }
 
     @Test
     void reproductTest() {
-        wolfMale.setSex(false);
+        wolf.setSex(false);
         wolfFemale.setSex(true);
         wolfFemale.setTimeToReproduct(0);
         wolfFemale.reproduct();
@@ -33,10 +35,10 @@ public class AnimalTest {
 
     @Test
     void moveTest() {
-        wolfMale.move();
-        Assertions.assertTrue(wolfMale.getX() != x || wolfMale.getY() != y);
+        wolf.move();
+        assertTrue(wolf.getX() != x || wolf.getY() != y);
         wolfFemale.move();
-        Assertions.assertTrue(wolfFemale.getX() != x || wolfFemale.getY() != y);
+        assertTrue(wolfFemale.getX() != x || wolfFemale.getY() != y);
     }
 
     @Test
@@ -44,10 +46,10 @@ public class AnimalTest {
         Mouse mouse = new Mouse(island);
         mouse.setX(x);
         mouse.setY(y);
-        wolfMale.setFullness(60);
+        wolf.setFullness(60);
         for (int i = 0; i < 5; i++) {
-            wolfMale.eat();
+            wolf.eat();
         }
-        Assertions.assertEquals(2,island.getAnimals().size());
+        Assertions.assertEquals(2, island.getAnimals().size());
     }
 }

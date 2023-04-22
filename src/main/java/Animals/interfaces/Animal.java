@@ -47,15 +47,12 @@ public abstract class Animal implements Organism, Runnable, Cloneable {
     public void move() {
         if (getSpeed() == 0) return;
         int turn = random.nextInt(0, 4);
-        if (turn == 0) {
-            y += getSpeed();
-        } else if (turn == 1) {
-            y -= getSpeed();
-        } else if (turn == 2) {
-            x += getSpeed();
-        } else {
-            x -= getSpeed();
-        }
+
+        if (turn == 0)      y += getSpeed();
+        else if (turn == 1) y -= getSpeed();
+        else if (turn == 2) x += getSpeed();
+        else                x -= getSpeed();
+
         boundsCheck();
         if (getCountAnimalsOnCell() > getMaxCountOnCell()) {
             move();

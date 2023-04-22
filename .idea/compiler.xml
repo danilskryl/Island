@@ -10,8 +10,5 @@
         <module name="Island" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Island" target="18" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -23,10 +23,14 @@ public class Grass implements Runnable {
     }
 
     private void init() {
-        for (double[] ints : field) {
-            Arrays.fill(ints, 100);
+        try {
+            for (double[] ints : field) {
+                Arrays.fill(ints, 100);
+            }
+            LOGGER.debug("Grass field are filled");
+        } catch (Throwable e) {
+            LOGGER.error(e.getMessage());
         }
-        LOGGER.debug("Grass field are filled");
     }
 
     private synchronized void recovery() {
