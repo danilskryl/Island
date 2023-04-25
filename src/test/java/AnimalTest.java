@@ -1,6 +1,6 @@
-import Animals.omnivorous.Mouse;
-import Animals.predators.Wolf;
-import Island.Island;
+import animals.omnivorous.Mouse;
+import animals.predators.Wolf;
+import island.Island;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

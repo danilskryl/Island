@@ -1,7 +1,7 @@
-import Animals.herbivores.Herbivore;
-import Animals.omnivorous.Omnivorous;
-import Animals.predators.Predator;
-import Island.Island;
+import animals.herbivores.Herbivore;
+import animals.omnivorous.Omnivorous;
+import animals.predators.Predator;
+import island.Island;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
